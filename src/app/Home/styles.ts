@@ -5,17 +5,30 @@ export const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       backgroundColor: '#D0D2D8',
-      paddingTop: 62,
-      padding: 24,
-      gap: 24,
     },
-    text: {
+    text: { // Não utilizado
       fontSize: 36,
       fontWeight: 'bold',
       color: '#3AA1fF'
     },
     logo: {
       height: 34,
-      width: 134
+      width: 134,
+      marginTop: 62
+    },
+    form: {
+      width: '100%',
+      marginTop: 42,
+      gap: 7,
+      paddingHorizontal: 16
+    },
+    content: {
+      flex: 1,
+      width: '100%',
+      backgroundColor: '#FFF',
+      padding: 24,
+      marginTop: 24,
+      borderTopLeftRadius: 32,
+      borderTopRightRadius: 32
     }
 })
