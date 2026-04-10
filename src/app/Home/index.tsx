@@ -4,6 +4,8 @@ import { Input } from '@/components/Input'
 import { Button } from '@/components/Button' // onPress={ () => console.log('Entrar')} é uma Arrow Function
 
 import { styles } from './styles'
+import { Filter } from '@/components/Filter'
+import { FilterStatus } from '@/components/types/FilterStatus'
 
 export default function App(){
   return (
@@ -13,9 +15,16 @@ export default function App(){
           source={require('@/assets/logo.png')} 
           style={styles.logo}
         />
-        
-        <Input placeholder='O que você precisa comprar?' />
-        <Button title="Adicionar" />
+
+        <View style={styles.form}>
+          <Input placeholder='O que você precisa comprar?' />
+          <Button title="Adicionar" />
+        </View>
+
+        <View style={styles.content}>
+          <Filter status={FilterStatus.DONE} isActive />
+          <Filter status={FilterStatus.PENDING} isActive={false} />
+        </View>
       </View>
     </>
   )
