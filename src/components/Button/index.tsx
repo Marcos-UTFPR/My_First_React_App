@@ -11,7 +11,9 @@ export function Button({ title, ...rest }: Props){  // "...rest" passa todo o qu
     return(
         <>
             <TouchableOpacity 
-                style={styles.container} {...rest}
+                style={styles.container} 
+                activeOpacity={0.7} // Fica 0.7 por padrão
+                {...rest}
             > 
                 <Text style={styles.title}>{title}</Text>
             </TouchableOpacity>
