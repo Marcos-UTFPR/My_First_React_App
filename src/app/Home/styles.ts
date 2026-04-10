@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native'
 
-
-export const styles = StyleSheet.create({
+export const styles = StyleSheet.create({ 
     container: { // "Minha caixinha" - É tipo JSON
       flex: 1,
       alignItems: 'center',
       backgroundColor: '#D0D2D8',
       paddingTop: 62,
-      padding: 24
+      padding: 24,
+      gap: 24,
     },
     text: {
       fontSize: 36,
