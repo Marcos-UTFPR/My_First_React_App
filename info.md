@@ -11,5 +11,5 @@ CTRL+SHIFT+V
 
 # Lucide Chart e SVG
 ```bash
-npx expo install lucide-react-native react-native install
+npx expo install lucide-react-native react-native-svg install
 ```
