@@ -27,6 +27,7 @@ export const styles = StyleSheet.create({
       width: '100%',
       backgroundColor: '#FFF',
       padding: 24,
+      paddingTop: 32,
       marginTop: 24,
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32
@@ -38,5 +39,13 @@ export const styles = StyleSheet.create({
       borderBottomWidth: 1,
       borderBottomColor: '#E4E6EC',
       paddingBottom: 12
+    },
+    clearButton: {
+      margin: 'auto'
+    },
+    clearText: {
+      fontSize: 12,
+      color: '#828282',
+      fontWeight: 600
     }
 })
