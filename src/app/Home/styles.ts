@@ -30,5 +30,13 @@ export const styles = StyleSheet.create({
       marginTop: 24,
       borderTopLeftRadius: 32,
       borderTopRightRadius: 32
+    },
+    header: {
+      width: '100%',
+      flexDirection: 'row',
+      gap: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: '#E4E6EC',
+      paddingBottom: 12
     }
 })
