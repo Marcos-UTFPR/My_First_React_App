@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
       paddingBottom: 12
     },
     clearButton: {
-      margin: 'auto'
+      marginLeft: 'auto'
     },
     clearText: {
       fontSize: 12,
