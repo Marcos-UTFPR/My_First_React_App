@@ -1,4 +1,5 @@
 import { View, Text, Image, Touchable, TouchableOpacity, ScrollView, FlatList } from 'react-native' // OBS: Button traz o estilo de botão nativo do Sistema Operacional por default
+import { useState } from 'react' // useState é um hook
 // OBS: ScrollView carrega todos os itens na memória de uma vez, mesmo se não estiver aparecendo na tela. A FlatList carrega só o que aparece na tela
 
 import { Input } from '@/components/Input'
@@ -22,6 +23,12 @@ const ITEMS = [
 ]
 
 export default function App(){
+  // console.log('ITEMS', ITEMS)
+
+  //let filter = FilterStatus.PENDING;
+  const [filter, setFilter] = useState<FilterStatus>(FilterStatus.PENDING)// Um estado sempre é uma constante - setFilter verifica se houve alteração no filter
+  const [description, setDescription] = useState('')
+
   return (
     <>
       <View style={styles.container}>
@@ -31,7 +38,10 @@ export default function App(){
         />
 
         <View style={styles.form}>
-          <Input placeholder='O que você precisa comprar?' />
+          <Input 
+            placeholder='O que você precisa comprar?'
+            onChangeText={(value)=>(setDescription(value))}
+          />
           <Button title="Adicionar" />
         </View>
 
@@ -39,7 +49,14 @@ export default function App(){
           <View style={styles.header}>
             {
               FILTER_STATUS.map((status)=>(
-                <Filter key={status} status={status} isActive />
+                <Filter 
+                  key={status} 
+                  status={status} 
+                  isActive 
+                  onPress={()=>(
+                    setFilter(status) // Manda informação de qual estado está e vai atualizar o filter
+                  )}
+                />
               ))
             }
 
