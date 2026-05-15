@@ -13,3 +13,8 @@ CTRL+SHIFT+V
 ```bash
 npx expo install lucide-react-native react-native-svg install
 ```
+
+# Async-storage
+```bash
+npx expo install @react-native-async-storage/async-storage
+```
