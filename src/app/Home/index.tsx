@@ -1,5 +1,5 @@
 import { View, Text, Image, Touchable, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native' // OBS: Button traz o estilo de botão nativo do Sistema Operacional por default
-import { useState } from 'react' // useState é um hook
+import { useEffect, useState } from 'react' // useState é um hook
 // OBS: ScrollView carrega todos os itens na memória de uma vez, mesmo se não estiver aparecendo na tela. A FlatList carrega só o que aparece na tela
 
 import { Input } from '@/components/Input'
@@ -9,6 +9,7 @@ import { Item } from '@/components/Item'
 
 import { styles } from './styles'
 import { FilterStatus } from '@/components/types/FilterStatus'
+import { ItemStorage, itemsStorage } from '@/components/storage/itemStorage'
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
@@ -29,11 +30,11 @@ export default function App(){
   // Estados temporários, remover no futuro
   const [filter, setFilter] = useState<FilterStatus>(FilterStatus.PENDING) // Um estado sempre é uma constante - setFilter verifica se houve alteração no filter
   const [description, setDescription] = useState('')
-  const [items, setItems] = useState<any>([])
+  const [items, setItems] = useState<ItemStorage[]>([])
 
   // Adicionar produtos é uma ação feita pelo usuário, logo adicionar como handle...
   // É errado dar responsabilidade de persistência de dados para um item de renderização, deveria estar em .TS separado
-  function handleAdd(){
+  async function handleAdd(){
     if(!description.trim()){
       return Alert.alert('Adicionar', 'Informe a descrição do item.')
     }
@@ -46,8 +47,65 @@ export default function App(){
 
     //console.log(newItem)
 
-    setItems(prevState => [...prevState, newItem]) // ... = Operador spread
+    //setItems(prevState => [...prevState, newItem]) // ... = Operador spread
+    await itemsStorage.add(newItem)
+    await itemsByStatus()
+
+    setDescription('')
+    setFilter(FilterStatus.PENDING)
   }
+
+  async function handleRemove(id: string){
+    try {
+      await itemsStorage.remove(id)
+      await itemsByStatus()
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Erro', 'Não foi possível remover o item.')
+    }
+  }
+
+  async function onClear(){
+    try {
+      await itemsStorage.clear()
+      setItems([])
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Erro', 'Não foi possível limpar.')
+    }
+  }
+
+  async function handleClear(){
+    Alert.alert('Limpar', 'Deseja remover todos os itens?', [
+      {text:'Não', style: 'cancel'},
+      {text:'Sim', onPress: () => onClear()}
+    ])
+  }
+
+  async function itemsByStatus(){
+    try {
+      const response = await itemsStorage.getByStatus(filter)
+      setItems(response)
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Erro', 'Não foi possível filtrar os itens.')
+    }
+  }
+
+  async function handleToggleItemStatus(id: string){
+    try {
+      await itemsStorage.toggleStatus(id)
+      await itemsByStatus
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Erro', 'Não foi possível trocar o status.')
+    }
+  }
+
+  //useEffect(() => { console.log('Axô #1')}, [filter]) // É chamado sempre que filter é modificado
+  useEffect(() => {
+    itemsByStatus()
+  }, [filter])
 
   return (
     <>
@@ -61,6 +119,7 @@ export default function App(){
           <Input 
             placeholder='O que você precisa comprar?'
             onChangeText={(value)=>(setDescription(value))}
+            value={description}
           />
           <Button title="Adicionar" onPress={handleAdd}/>
         </View>
@@ -80,7 +139,7 @@ export default function App(){
               ))
             }
 
-            <TouchableOpacity style={styles.clearButton}>
+            <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
               <Text style={styles.clearText}>Limpar</Text>
             </TouchableOpacity>
 
@@ -104,8 +163,8 @@ export default function App(){
             renderItem={({ item }) => (
               <Item 
                   data={{status: item.status, description: item.description}}
-                  onStatus={() => console.log('muda status')}
-                  onRemove={() => console.log('remover')}
+                  onStatus={() => handleToggleItemStatus(item.id)}
+                  onRemove={() => handleRemove(item.id)}
                 />
             )}
             showsHorizontalScrollIndicator={true}
