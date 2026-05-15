@@ -1,4 +1,4 @@
-import { View, Text, Image, Touchable, TouchableOpacity, ScrollView, FlatList } from 'react-native' // OBS: Button traz o estilo de botão nativo do Sistema Operacional por default
+import { View, Text, Image, Touchable, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native' // OBS: Button traz o estilo de botão nativo do Sistema Operacional por default
 import { useState } from 'react' // useState é um hook
 // OBS: ScrollView carrega todos os itens na memória de uma vez, mesmo se não estiver aparecendo na tela. A FlatList carrega só o que aparece na tela
 
@@ -14,20 +14,40 @@ const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
 //const ITEMS = []
 //const ITEMS = Array.from({length: 200}).map((_, index)=>(String(index)));
-const ITEMS = [
+/*const ITEMS = [
   { id: '1', status: FilterStatus.DONE, description: '1 kg de café'},
   { id: '2', status: FilterStatus.DONE, description: '5 kg de alcatra'},
   { id: '3', status: FilterStatus.DONE, description: '5 kg de maionese'},
   { id: '4', status: FilterStatus.PENDING, description: '7 kg de carvão'},
   { id: '5', status: FilterStatus.PENDING, description: '1 kg de pão'}
-]
+]*/
 
 export default function App(){
   // console.log('ITEMS', ITEMS)
 
   //let filter = FilterStatus.PENDING;
-  const [filter, setFilter] = useState<FilterStatus>(FilterStatus.PENDING)// Um estado sempre é uma constante - setFilter verifica se houve alteração no filter
+  // Estados temporários, remover no futuro
+  const [filter, setFilter] = useState<FilterStatus>(FilterStatus.PENDING) // Um estado sempre é uma constante - setFilter verifica se houve alteração no filter
   const [description, setDescription] = useState('')
+  const [items, setItems] = useState<any>([])
+
+  // Adicionar produtos é uma ação feita pelo usuário, logo adicionar como handle...
+  // É errado dar responsabilidade de persistência de dados para um item de renderização, deveria estar em .TS separado
+  function handleAdd(){
+    if(!description.trim()){
+      return Alert.alert('Adicionar', 'Informe a descrição do item.')
+    }
+
+    const newItem = {
+      id: Math.random().toString(36).substring(2),
+      description,
+      status: FilterStatus.PENDING
+    }
+
+    //console.log(newItem)
+
+    setItems(prevState => [...prevState, newItem]) // ... = Operador spread
+  }
 
   return (
     <>
@@ -42,7 +62,7 @@ export default function App(){
             placeholder='O que você precisa comprar?'
             onChangeText={(value)=>(setDescription(value))}
           />
-          <Button title="Adicionar" />
+          <Button title="Adicionar" onPress={handleAdd}/>
         </View>
 
         <View style={styles.content}>
@@ -79,7 +99,7 @@ export default function App(){
           </ScrollView>} */}
 
           <FlatList
-            data={ITEMS}
+            data={items}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <Item 
